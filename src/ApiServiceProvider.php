@@ -3,7 +3,7 @@
 /*
  * This file is part of SeAT
  *
- * Copyright (C) 2015, 2016, 2017, 2018  Leon Jacobs
+ * Copyright (C) 2015, 2016, 2017, 2018, 2019  Leon Jacobs
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,14 +23,14 @@
 namespace Seat\Api;
 
 use Illuminate\Routing\Router;
-use Illuminate\Support\ServiceProvider;
 use Seat\Api\Http\Middleware\ApiToken;
+use Seat\Services\AbstractSeatPlugin;
 
 /**
  * Class ApiServiceProvider.
  * @package Seat\Api
  */
-class ApiServiceProvider extends ServiceProvider
+class ApiServiceProvider extends AbstractSeatPlugin
 {
     /**
      * Bootstrap the application services.
@@ -48,7 +48,7 @@ class ApiServiceProvider extends ServiceProvider
 
         $this->add_views();
 
-        $this->add_publications();
+        $this->add_migrations();
 
         $this->add_translations();
     }
@@ -123,18 +123,6 @@ class ApiServiceProvider extends ServiceProvider
     }
 
     /**
-     * Set the paths for migrations and assets that
-     * should be published to the main application.
-     */
-    public function add_publications()
-    {
-
-        $this->publishes([
-            __DIR__ . '/database/migrations/' => database_path('migrations'),
-        ]);
-    }
-
-    /**
      * Add the packages translation files.
      */
     public function add_translations()
@@ -158,5 +146,65 @@ class ApiServiceProvider extends ServiceProvider
         // Include this packages menu items
         $this->mergeConfigFrom(
             __DIR__ . '/Config/package.sidebar.php', 'package.sidebar');
+    }
+
+    /**
+     * Set the path for migrations which should
+     * be migrated by laravel. More informations:
+     * https://laravel.com/docs/5.5/packages#migrations.
+     */
+    private function add_migrations()
+    {
+        $this->loadMigrationsFrom(__DIR__ . '/database/migrations/');
+    }
+
+    /**
+     * Return the plugin public name as it should be displayed into settings.
+     *
+     * @return string
+     */
+    public function getName(): string
+    {
+        return 'SeAT API';
+    }
+
+    /**
+     * Return the plugin repository address.
+     *
+     * @return string
+     */
+    public function getPackageRepositoryUrl(): string
+    {
+        return 'https://github.com/eveseat/api';
+    }
+
+    /**
+     * Return the plugin technical name as published on package manager.
+     *
+     * @return string
+     */
+    public function getPackagistPackageName(): string
+    {
+        return 'api';
+    }
+
+    /**
+     * Return the plugin vendor tag as published on package manager.
+     *
+     * @return string
+     */
+    public function getPackagistVendorName(): string
+    {
+        return 'eveseat';
+    }
+
+    /**
+     * Return the plugin installed version.
+     *
+     * @return string
+     */
+    public function getVersion(): string
+    {
+        return config('api.config.version');
     }
 }

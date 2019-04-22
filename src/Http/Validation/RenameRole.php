@@ -20,38 +20,33 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-namespace Seat\Api\Http\Resources;
+namespace Seat\Api\Http\Validation;
 
-use Illuminate\Http\Resources\Json\Resource;
-use Seat\Eveapi\Models\Assets\CharacterAsset;
-use Seat\Eveapi\Models\Assets\CorporationAsset;
+use Illuminate\Foundation\Http\FormRequest;
 
-/**
- * Class AssetResource.
- * @package Seat\Api\Http\Resources
- */
-class AssetResource extends Resource
+class RenameRole extends FormRequest
 {
     /**
-     * Transform the resource into an array.
+     * Authorize the request by default.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @return bool
+     */
+    public function authorize()
+    {
+
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
      *
      * @return array
      */
-    public function toArray($request)
+    public function rules()
     {
-        $definition = parent::toArray($request);
 
-        array_forget($definition, 'created_at');
-        array_forget($definition, 'updated_at');
-
-        if ($this->resource instanceof CorporationAsset)
-            array_forget($definition, 'corporation_id');
-
-        if ($this->resource instanceof CharacterAsset)
-            array_forget($definition, 'character_id');
-
-        return $definition;
+        return [
+            'title' => 'required|string|unique:roles,title',
+        ];
     }
 }

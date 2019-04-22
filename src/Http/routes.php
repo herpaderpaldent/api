@@ -3,7 +3,7 @@
 /*
  * This file is part of SeAT
  *
- * Copyright (C) 2015, 2016, 2017, 2018  Leon Jacobs
+ * Copyright (C) 2015, 2016, 2017, 2018, 2019  Leon Jacobs
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -75,6 +75,7 @@ Route::group([
                 Route::get('/', 'RoleController@getIndex');
                 Route::get('/{role_id}', 'RoleController@getDetail')->where('role_id', '[0-9]+');
                 Route::post('/', 'RoleController@postNew');
+                Route::put('/{role_id}', 'RoleController@putRename')->where('role_id', '[0-9]+');
                 Route::delete('/{role_id}', 'RoleController@deleteRole')->where('role_id', '[0-9]+');
                 Route::post('/groups', 'RoleController@postGrantUserRole');
                 Route::delete('/groups/{group_id}/{role_id}', 'RoleController@deleteRevokeGroupRole');
